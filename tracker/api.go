@@ -1,11 +1,11 @@
 package tracker
 
 import (
-	"bitcoin-tracker/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
+	"bitcoin-tracker/utils"
 )
 
 const COINGECKO_API_URL = "https://api.coingecko.com/api/v3"
@@ -19,9 +19,19 @@ func FetchBitcoinPrice(currency string) (*PriceData, error) {
 
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, utils.WrapError("HTTP request failed", err)
+		return nil, &utils.CustomError{
+			Context: "HTTP request failed",
+			Err:     err,
+		}
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, &utils.APIError{
+			StatusCode: resp.StatusCode,
+			Message:    resp.Status,
+		}
+	}
 
 	var data CoinGeckoResponse
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
@@ -30,7 +40,7 @@ func FetchBitcoinPrice(currency string) (*PriceData, error) {
 
 	price, ok := data.Bitcoin[currency]
 	if !ok {
-		return nil, fmt.Errorf("price not found for currency: %s", currency)
+		return nil, fmt.Errorf("price not found for currency: %s (API might be rate limited)", currency)
 	}
 
 	return &PriceData{

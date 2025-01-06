@@ -1,101 +1,118 @@
-## **Project Title**: Bitcoin Price Tracker
+# Bitcoin Price Tracker
 
-### **Objective**
-Develop a Go-based command-line application (CLI) that allows users to:
-1. Fetch and display real-time Bitcoin prices in multiple currencies.
-2. Periodically update prices and notify users of significant changes.
-3. Log historical prices to a local file for review.
+A command-line application that tracks Bitcoin prices in real-time, provides price alerts, and logs historical data.
 
----
+## Features
 
-### **Features**
-1. **Fetch Current Prices**:
-   - Retrieve real-time Bitcoin prices in user-specified currencies using a public API.
-   
-2. **Periodic Updates**:
-   - Continuously fetch and update Bitcoin prices at configurable intervals using goroutines.
+- 🪙 Real-time Bitcoin price tracking
+- 🌍 Multiple currency support
+- 🚨 Configurable price alerts
+- 📊 Historical price logging
+- ⚡ Non-blocking updates using goroutines
+- 🎨 Clean terminal UI
 
-3. **Price Alerts**:
-   - Notify the user when Bitcoin prices cross specified thresholds.
+## Setup
 
-4. **Historical Logging**:
-   - Log price data to a local file with timestamps for future analysis.
+1. **Clone the repository**
+```bash
+git clone https://github.com/helioLJ/bitcoin-tracker.git
+cd bitcoin-tracker
+```
 
----
+2. **Install dependencies**
+```bash
+go mod download
+```
 
-### **Go Concepts Incorporated**
-1. **Imports/Packages**:
-   - Utilize standard libraries (`net/http`, `encoding/json`, `os`, `time`) and third-party packages as needed (e.g., `github.com/joho/godotenv` for managing API keys).
+3. **Configure the application**
 
-2. **Structs/Methods**:
-   - Create structs for price data and configuration settings.
-   - Define methods to fetch prices, format output, and handle updates.
+Create a `.env` file in the root directory:
+```env
+UPDATE_INTERVAL=5s
+CURRENCY=usd
+ALERT_THRESHOLD=100000
+```
 
-3. **Error Handling**:
-   - Gracefully manage HTTP request errors, JSON parsing issues, and file I/O problems.
-   - Display meaningful messages to users for troubleshooting.
+- `UPDATE_INTERVAL`: How often to fetch new prices (e.g., 5s, 1m) // To prevent rate limiting, set to 1m
+- `CURRENCY`: Default currency (e.g., usd, eur, gbp)
+- `ALERT_THRESHOLD`: Price threshold for alerts
 
-4. **Go Routines**:
-   - Fetch Bitcoin prices concurrently without blocking user inputs.
-   - Allow for background tasks like logging and threshold monitoring.
+## Usage
 
-5. **Channels**:
-   - Use channels for inter-goroutine communication, enabling real-time price updates and alerts.
+1. **Run the application**
+```bash
+go run .
+```
 
----
+2. **Enter your preferred currency** when prompted, or press Enter to use the default from `.env`
 
-### **Advanced Go Concepts (Optional)**
-1. **cgo**: 
-   - Add optional high-performance computation for price trend analysis.
-2. **Generics**: 
-   - Implement generic methods for handling API responses or data transformations.
-3. **Iterators**:
-   - Use iterators for managing and displaying logged price history.
+3. **Monitor prices** - The UI will show:
+   - Current Bitcoin price
+   - Session price change percentage
+   - Last update time
+   - Price alerts when thresholds are crossed
 
+4. **View price history** in `price_history.csv`
 
----
+5. **Exit** with Ctrl+C
 
-### **Implementation Plan**
+## Go Concepts Used
 
-#### **1. Core Features Implementation**
-1. Fetch real-time Bitcoin prices using a public API (e.g., CoinGecko or CoinMarketCap).
-2. Log historical data in a human-readable format.
+### 1. Packages and Project Structure
+```
+├── main.go           # Application entry point
+├── tracker/          # Core tracking functionality
+│   ├── api.go        # API interaction
+│   ├── models.go     # Data structures
+│   └── tracker.go    # Price tracking logic
+└── utils/           # Utility functions
+    ├── config.go    # Configuration management
+    ├── error.go     # Error handling
+    └── file.go      # File operations
+```
 
-#### **2. Application Flow**
-1. **User Input**:
-   - Select currency for price tracking.
-   - Set optional price thresholds for alerts.
-2. **Concurrent Operations**:
-   - Run real-time price updates in a background goroutine.
-3. **Display Results**:
-   - Continuously update the terminal with the latest price and any alerts.
+### 2. Concurrency
+- **Goroutines**: Used for background price fetching
+- **Channels**: Communication between components
+  - `priceChan`: Price updates
+  - `errorChan`: Error handling
+  - `alertChan`: Price alerts
+  - `stopChan`: Graceful shutdown
 
-#### **3. Incorporate Go Concepts**
-1. **Imports/Packages**:
-   - Use Go modules for managing dependencies and clean code organization.
-2. **Structs/Methods**:
-   - Define reusable structs for price data and configuration.
-3. **Error Handling**:
-   - Implement proper error handling for all operations.
-4. **Go Routines**:
-   - Fetch price data and monitor thresholds concurrently.
-5. **Channels**:
-   - Use channels to coordinate data fetching and alert notifications.
+### 3. Types and Interfaces
+```go
+type Tracker struct {
+    config    utils.Config
+    alerts    []Alert
+    priceChan chan PriceData
+    // ...
+}
 
----
+type PriceData struct {
+    Price     float64
+    Currency  string
+    Timestamp time.Time
+}
+```
 
-### **Stretch Goals**
-- Add support for multiple cryptocurrencies (e.g., Ethereum, Litecoin).
-- Implement a simple web server to display real-time prices using `net/http`.
-- Use a visualization library to generate charts of historical price trends.
+### 4. Error Handling
+- Custom error types with context
+- Graceful error display in UI
+- Error propagation through channels
 
----
+### 5. File I/O
+- Configuration loading from `.env`
+- CSV logging of price history
 
-### **Deliverables**
-1. A functional CLI application for Bitcoin price tracking.
-2. Code that demonstrates mastery of Go basics:
-   - Imports/Packages
-   - Structs/Methods
-   - Error Handling
-   - Goroutines and Channels
-3. Documentation for setup, usage, and an explanation of the Go concepts used.
+## Dependencies
+
+- `github.com/joho/godotenv`: Environment variable management
+- Standard library packages:
+  - `net/http`: API requests
+  - `encoding/json`: JSON parsing
+  - `time`: Time operations
+  - `os`: File operations
+
+## Contributing
+
+Feel free to submit issues and pull requests.

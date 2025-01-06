@@ -26,7 +26,6 @@ func LoadConfig() Config {
 		UpdateInterval: getEnvDuration("UPDATE_INTERVAL", 10*time.Second),
 		Currency:       getEnvString("CURRENCY", "usd"),
 		AlertThreshold: getEnvFloat("ALERT_THRESHOLD", 0),
-		APIKey:         getEnvString("API_KEY", ""),
 	}
 }
 
