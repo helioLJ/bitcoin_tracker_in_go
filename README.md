@@ -2,6 +2,8 @@
 
 A command-line application that tracks Bitcoin prices in real-time, provides price alerts, and logs historical data.
 
+![Bitcoin Price Tracker](./demo.gif)
+
 ## Features
 
 - 🪙 Real-time Bitcoin price tracking
