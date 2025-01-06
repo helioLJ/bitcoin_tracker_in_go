@@ -3,17 +3,18 @@ package tracker
 import (
 	"fmt"
 	"time"
+	"bitcoin-tracker/utils"
 )
 
 type Tracker struct {
-	config    Config
+	config    utils.Config
 	alerts    []Alert
 	priceChan chan PriceData
 	errorChan chan error
 	stopChan  chan struct{}
 }
 
-func NewTracker(config Config) *Tracker {
+func NewTracker(config utils.Config) *Tracker {
 	return &Tracker{
 		config:    config,
 		alerts:    make([]Alert, 0),

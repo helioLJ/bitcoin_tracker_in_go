@@ -52,22 +52,6 @@ Develop a Go-based command-line application (CLI) that allows users to:
 3. **Iterators**:
    - Use iterators for managing and displaying logged price history.
 
----
-
-### **Project Structure**
-```plaintext
-bitcoin-tracker/
-├── main.go           # Entry point of the application
-├── tracker/
-│   ├── tracker.go    # Logic for Bitcoin price tracking
-│   ├── models.go     # Structs for price data and alerts
-│   ├── api.go        # API interaction logic
-├── utils/
-│   ├── error.go      # Error handling utilities
-│   ├── config.go     # Environment variable handling
-├── .env              # API keys and config
-└── go.mod            # Go module definition
-```
 
 ---
 

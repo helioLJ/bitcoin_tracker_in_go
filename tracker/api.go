@@ -1,6 +1,7 @@
 package tracker
 
 import (
+	"bitcoin-tracker/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -18,7 +19,7 @@ func FetchBitcoinPrice(currency string) (*PriceData, error) {
 
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch price: %v", err)
+		return nil, utils.WrapError("HTTP request failed", err)
 	}
 	defer resp.Body.Close()
 

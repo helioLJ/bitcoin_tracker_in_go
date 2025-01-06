@@ -9,14 +9,6 @@ type PriceData struct {
 	Timestamp time.Time
 }
 
-// Config represents the application configuration
-type Config struct {
-	UpdateInterval time.Duration
-	Currency       string
-	AlertThreshold float64
-	APIKey         string
-}
-
 // Alert represents a price alert configuration
 type Alert struct {
 	Type      string // "above" or "below"

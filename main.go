@@ -9,6 +9,7 @@ import (
 	"strings"
 	"syscall"
 	"time"
+	"bitcoin-tracker/utils"
 )
 
 func main() {
@@ -24,9 +25,12 @@ func main() {
 		currency = "usd"  // Default to USD if no input
 	}
 
-	config := tracker.Config{
-		UpdateInterval: 30 * time.Second,
-		Currency:      currency,
+	// Load base config from environment
+	config := utils.LoadConfig()
+	
+	// Override currency if provided via CLI
+	if currency != "" {
+		config.Currency = currency
 	}
 
 	t := tracker.NewTracker(config)
